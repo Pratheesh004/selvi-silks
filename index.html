@@ -1,350 +1,762 @@
-&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;en&quot;&gt;
-&lt;head&gt;
-&lt;meta charset=&quot;UTF-8&quot;&gt;
-&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
-&lt;title&gt;Grand Diwali Selfie Booth&lt;/title&gt;
-&lt;style&gt;
-* { box-sizing: border-box; }
-body {
-margin: 0;
-min-height: 100vh;
-overflow-x: hidden;
-font-family: Arial, sans-serif;
-color: white;
-text-align: center;
-background:
-radial-gradient(ellipse at top, #7b168e 0%, transparent 55%),
-linear-gradient(160deg, #08001f, #31004f 48%, #090020);
-}
-#fireworks {
-position: fixed;
-inset: 0;
-width: 100%;
-height: 100%;
-pointer-events: none;
-z-index: 0;
-}
-.page {
-position: relative;
-z-index: 1;
-width: min(100% - 24px, 490px);
-margin: auto;
-padding: 22px 0 36px;
-}
-.logo-wrap {
-display: inline-flex;
-padding: 5px;
-border-radius: 20px;
-background: linear-gradient(135deg,
-#fff4a3, #ff9d00, #ff40b8, #7b5cff);
-box-shadow: 0 0 28px #ffb52e;
-animation: glow 2s infinite alternate;
-}
-.logo {
-display: block;
-width: 115px;
-height: 82px;
-padding: 7px;
-border-radius: 16px;
-object-fit: contain;
-background: white;
-}
-h1 {
-margin: 20px 0 10px;
-font-size: clamp(38px, 10vw, 56px);
-font-weight: 1000;
-line-height: 1.1;
-background: linear-gradient(
-90deg, #fff4a3, #ffac00, #ff58b5, #fff4a3
-);
-background-size: 250% auto;
-color: #ffd86b;
--webkit-background-clip: text;
-background-clip: text;
--webkit-text-fill-color: transparent;
-filter: drop-shadow(0 0 12px #ff8a00);
-animation: shine 3s linear infinite;
-}
-.subtitle {
-color: #fff2bd;
-font-size: 16px;
-line-height: 1.6;
-margin: 0 0 18px;
-}
-.lamps {
-font-size: 28px;
-letter-spacing: 8px;
-animation: float 2s ease-in-out infinite alternate;
-}
-.card {
-margin-top: 18px;
-padding: 16px;
-border: 2px solid #ffd66b;
-border-radius: 24px;
-background: rgba(19, 0, 43, .84);
-box-shadow: 0 0 24px #a72dff, inset 0 0 20px #5c1677;
-}
-.camera-box {
-overflow: hidden;
-position: relative;
-border: 3px solid #ffcf5c;
-border-radius: 16px;
-background: #10001e;
-}
-video, canvas#result {
-display: block;
-width: 100%;
-height: auto;
-}
-video {
-    min-height: 230px;
-object-fit: cover;
-}
-#result { display: none; }
-.btn {
-display: inline-block;
-width: 100%;
-margin-top: 12px;
-padding: 15px;
-border: 0;
-border-radius: 30px;
-font-size: 16px;
-font-weight: 800;
-cursor: pointer;
-color: #31004f;
-background: linear-gradient(90deg, #fff0a0, #ffb42e, #ffda67);
-box-shadow: 0 0 18px #ffb42e;
-transition: transform .2s;
-}
-.btn:active { transform: scale(.97); }
-.btn.secondary {
-color: white;
-background: linear-gradient(90deg, #a52cff, #ed3a9d);
-}
-.btn:disabled { opacity: .5; cursor: not-allowed; }
-#status {
-color: #ffe7a5;
-font-size: 13px;
-line-height: 1.5;
-overflow-wrap: anywhere;
-}
-@keyframes glow {
-from { box-shadow: 0 0 12px #ff9d00; }
-to { box-shadow: 0 0 35px #ff40b8, 0 0 55px #7b5cff; }
-}
-@keyframes shine {
-to { background-position: 250% center; }
-}
-@keyframes float {
-to { transform: translateY(-5px); }
-}
-footer {
-margin-top: 18px;
-color: #ffe6aa;
-font-size: 13px;
-}
-&lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;canvas id=&quot;fireworks&quot;&gt;&lt;/canvas&gt;
-&lt;main class=&quot;page&quot;&gt;
-&lt;div class=&quot;logo-wrap&quot;&gt;
-&lt;img class=&quot;logo&quot; src=&quot;logo.png&quot; alt=&quot;Client Logo&quot;
-onerror=&quot;this.style.display=&#39;none&#39;&quot;&gt;
-&lt;/div&gt;
-&lt;div class=&quot;lamps&quot;&gt;�� ✨ ��&lt;/div&gt;
-&lt;h1&gt;HAPPY&lt;br&gt;DIWALI!&lt;/h1&gt;
-&lt;p class=&quot;subtitle&quot;&gt;
-May your life sparkle with happiness!&lt;br&gt;
-Celebrate. Smile. Capture the magic.
-&lt;/p&gt;
-&lt;div class=&quot;lamps&quot;&gt;�� �� ��&lt;/div&gt;
-&lt;section class=&quot;card&quot;&gt;
-&lt;h2 style=&quot;color:#ffdc77;margin:0 0 14px&quot;&gt;
-✨ Your Diwali Memories ✨
-&lt;/h2&gt;
-&lt;div class=&quot;camera-box&quot;&gt;
-&lt;video id=&quot;video&quot; autoplay playsinline&gt;&lt;/video&gt;
-&lt;canvas id=&quot;result&quot;&gt;&lt;/canvas&gt;
-&lt;/div&gt;
-&lt;button class=&quot;btn&quot; id=&quot;start&quot;&gt;
-�� OPEN SELFIE CAMERA
-&lt;/button&gt;
-&lt;button class=&quot;btn secondary&quot; id=&quot;snap&quot; disabled&gt;
-✨ CAPTURE MY SELFIE ✨
-&lt;/button&gt;
-&lt;button class=&quot;btn&quot; id=&quot;download&quot; disabled&gt;
-⬇ DOWNLOAD MY DIWALI PHOTO
-&lt;/button&gt;
-&lt;button class=&quot;btn secondary&quot; id=&quot;again&quot; disabled&gt;
-�� TAKE ANOTHER SELFIE
-&lt;/button&gt;
-&lt;p id=&quot;status&quot;&gt;
-Tap Open Selfie Camera and allow camera access.
-&lt;/p&gt;
-&lt;/section&gt;
-&lt;footer&gt;
-�� Wishing You Light, Love &amp; Prosperity
-&lt;/footer&gt;
-&lt;/main&gt;
-&lt;script&gt;
-// Colorful fireworks animation
-const fw = document.getElementById(&quot;fireworks&quot;);
-const fctx = fw.getContext(&quot;2d&quot;);
-let particles = [];
-let rockets = [];
-let lastLaunch = 0;
-function resize() {
-const dpr = Math.min(window.devicePixelRatio || 1, 2);
-fw.width = innerWidth * dpr;
-fw.height = innerHeight * dpr;
-fctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-}
-resize();
-window.addEventListener(&quot;resize&quot;, resize);
-function burst(x, y) {
-const colors = [
-&quot;#ffdf59&quot;, &quot;#ff3e9d&quot;, &quot;#64f6ff&quot;,
-&quot;#b96bff&quot;, &quot;#ff8738&quot;, &quot;#ffffff&quot;, &quot;#7cff9e&quot;
-];
-const color = colors[Math.floor(Math.random() * colors.length)];
-for (let i = 0; i &lt; 65; i++) {
-const angle = Math.random() * Math.PI * 2;
-const speed = 1 + Math.random() * 4.5;
-particles.push({
-x, y,
-vx: Math.cos(angle) * speed,
-vy: Math.sin(angle) * speed,
-life: 45 + Math.random() * 35,
-maxLife: 80,
-color,
-size: 1 + Math.random() * 2.5
-});
-}
-}
-function animate(time) {
-fctx.clearRect(0, 0, innerWidth, innerHeight);
-if (time - lastLaunch &gt; 480) {
-burst(
-25 + Math.random() * (innerWidth - 50),
-40 + Math.random() * innerHeight * .58
-);
-lastLaunch = time;
-}
-particles = particles.filter(p =&gt; p.life &gt; 0);
-for (const p of particles) {
-p.x += p.vx;
-p.y += p.vy;
-p.vy += .035;
-p.vx *= .99;
-p.life--;
-fctx.globalAlpha = Math.max(0, p.life / p.maxLife);
-fctx.fillStyle = p.color;
-fctx.shadowBlur = 12;
-fctx.shadowColor = p.color;
-fctx.beginPath();
-fctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-fctx.fill();
-}
-fctx.globalAlpha = 1;
-fctx.shadowBlur = 0;
-requestAnimationFrame(animate);
-}
-// Fireworks start immediately when page opens
-for (let i = 0; i &lt; 5; i++) {
-burst(
-innerWidth * (.15 + Math.random() * .7),
-innerHeight * (.08 + Math.random() * .48)
-);
-}
-requestAnimationFrame(animate);
-// Selfie camera
-const video = document.getElementById(&quot;video&quot;);
-const result = document.getElementById(&quot;result&quot;);
-const ctx = result.getContext(&quot;2d&quot;);
-const start = document.getElementById(&quot;start&quot;);
-const snap = document.getElementById(&quot;snap&quot;);
-const download = document.getElementById(&quot;download&quot;);
-const again = document.getElementById(&quot;again&quot;);
-const status = document.getElementById(&quot;status&quot;);
-let stream = null;
-start.onclick = async () =&gt; {
-try {
-if (!navigator.mediaDevices?.getUserMedia) {
-throw new Error(&quot;Open this website using its HTTPS link.&quot;);
-}
-if (stream) stream.getTracks().forEach(t =&gt; t.stop());
-stream = await navigator.mediaDevices.getUserMedia({
-video: { facingMode: &quot;user&quot; },
-audio: false
-});
-video.srcObject = stream;
-await video.play();
-video.style.display = &quot;block&quot;;
-result.style.display = &quot;none&quot;;
-snap.disabled = false;
-download.disabled = true;
-again.disabled = true;
-status.textContent = &quot;Camera ready! Smile! ��&quot;;
-} catch (e) {
-status.textContent =
-&quot;Camera access failed. Use the HTTPS website and allow camera permission.&quot;;
-}
-};
-snap.onclick = () =&gt; {
-if (!video.videoWidth) return;
-const w = video.videoWidth;
-const h = video.videoHeight;
-const footer = Math.round(w * .26);
-result.width = w;
-result.height = h + footer;
-ctx.drawImage(video, 0, 0, w, h);
-const g = ctx.createLinearGradient(0, h, w, h + footer);
-g.addColorStop(0, &quot;#5700b4&quot;);
-g.addColorStop(.5, &quot;#d80086&quot;);
-g.addColorStop(1, &quot;#ff7a00&quot;);
-ctx.fillStyle = g;
-ctx.fillRect(0, h, w, footer);
-ctx.strokeStyle = &quot;#ffdf70&quot;;
-ctx.lineWidth = Math.max(5, w * .012);
-ctx.strokeRect(5, 5, w - 10, h + footer - 10);
-ctx.textAlign = &quot;center&quot;;
-ctx.fillStyle = &quot;#ffe776&quot;;
-ctx.font = `bold ${Math.round(w * .07)}px Arial`;
-ctx.fillText(&quot;HAPPY DIWALI!&quot;, w / 2, h + footer * .43);
-ctx.fillStyle = &quot;#ffffff&quot;;
-ctx.font = `bold ${Math.round(w * .027)}px Arial`;
-ctx.fillText(&quot;WISHING YOU JOY &amp; PROSPERITY&quot;,
-w / 2, h + footer * .70);
-ctx.font = `${Math.round(w * .045)}px Arial`;
-ctx.fillText(&quot;✦ �� ✨ �� ✦&quot;,
-w / 2, h + footer * .90);
-video.style.display = &quot;none&quot;;
-result.style.display = &quot;block&quot;;
-snap.disabled = true;
-download.disabled = false;
-again.disabled = false;
-status.textContent = &quot;Your festive selfie is ready!&quot;;
-};
-download.onclick = () =&gt; {
-const a = document.createElement(&quot;a&quot;);
 
-a.download = &quot;Happy-Diwali-Selfie.png&quot;;
-a.href = result.toDataURL(&quot;image/png&quot;);
-a.click();
-};
-again.onclick = () =&gt; {
-result.style.display = &quot;none&quot;;
-video.style.display = &quot;block&quot;;
-snap.disabled = false;
-download.disabled = true;
-again.disabled = true;
-status.textContent = &quot;Ready for another selfie!&quot;;
-};
-window.addEventListener(&quot;pagehide&quot;, () =&gt; {
-if (stream) stream.getTracks().forEach(t =&gt; t.stop());
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Selvi Silks - Grand Diwali 2.0</title>
+
+<style>
+*{
+ box-sizing:border-box;
+}
+
+body{
+ margin:0;
+ padding:15px 10px;
+ text-align:center;
+ font-family:Arial,sans-serif;
+ background:linear-gradient(135deg,#f5e5ff,#e9d1ff,#fff0e6);
+}
+
+h1{
+ color:#7200bd;
+ font-size:32px;
+ margin:10px 0;
+}
+
+.subtitle{
+ color:#71318c;
+ font-size:18px;
+ margin-bottom:20px;
+}
+
+.booth{
+ width:min(100%,540px);
+ margin:auto;
+ padding:12px;
+ border:7px solid #e7c46d;
+ border-radius:35px;
+ background:linear-gradient(145deg,#8500d5,#5700a0,#30005c);
+ box-shadow:0 12px 35px #55008035;
+}
+
+.heading{
+ color:#fff0c2;
+ font-size:21px;
+ font-weight:bold;
+ padding:12px 4px;
+ letter-spacing:1px;
+}
+
+.stage{
+ width:100%;
+ aspect-ratio:1144 / 1375;
+ overflow:hidden;
+ background:#350052;
+}
+
+.stage canvas{
+ width:100%;
+ height:100%;
+ display:block;
+}
+
+#result{
+ display:none;
+}
+
+.wishes{
+ margin-top:12px;
+ padding:17px 5px;
+ background:linear-gradient(135deg,#fff,#f1e2ff);
+ color:#6500b5;
+ border:3px solid #e7c46d;
+ border-radius:20px;
+ font:bold italic 30px Georgia,serif;
+}
+
+.wishes small{
+ display:block;
+ font:bold 14px Arial;
+ margin-bottom:5px;
+}
+
+button{
+ width:100%;
+ margin-top:10px;
+ padding:15px;
+ border:2px solid #f4d995;
+ border-radius:12px;
+ font-size:16px;
+ font-weight:bold;
+ cursor:pointer;
+ background:#f0d17e;
+ color:#4c087a;
+}
+
+button:disabled{
+ opacity:.4;
+ cursor:not-allowed;
+}
+
+.secondary{
+ background:white;
+ color:#6500b5;
+ border-color:#d9b9ef;
+}
+
+.status{
+ color:#6500a9;
+ font-size:14px;
+ margin:15px auto;
+ line-height:1.5;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>🪔 Selvi Silks 🪔</h1>
+
+<div class="subtitle">
+Capture Your Diwali Memories!
+</div>
+
+<div class="booth">
+
+ <div class="heading">
+ GRAND DIWALI SELFIE BOOTH
+ </div>
+
+ <div class="stage" id="liveStage">
+  <canvas id="preview" width="1144" height="1375"></canvas>
+ </div>
+
+ <div class="stage" id="photoStage" style="display:none">
+  <canvas id="result" width="1144" height="1375"></canvas>
+ </div>
+
+ <div class="wishes">
+  <small>Wishing You a</small>
+  Happy Diwali!
+  <small>✨ Let Your Happiness Shine ✨</small>
+ </div>
+
+ <button id="start">📸 Start Camera</button>
+
+ <button id="capture" disabled>
+  ✨ Take Selfie
+ </button>
+
+ <button id="retake" class="secondary" disabled>
+  🔄 Retake Photo
+ </button>
+
+ <button id="download" class="secondary" disabled>
+  ⬇ Download Photo
+ </button>
+
+ <button id="whatsapp" disabled>
+  💚 Share on WhatsApp
+ </button>
+
+ <button id="instagram" disabled>
+  📷 Share on Instagram
+ </button>
+
+</div>
+
+<div class="status" id="status">
+Loading Diwali Frame...
+</div>
+
+<script>
+
+// ===================================
+// SETTINGS
+// ===================================
+
+const W=1144;
+const H=1375;
+
+const preview=document.getElementById("preview");
+const pctx=preview.getContext("2d");
+
+const result=document.getElementById("result");
+const rctx=result.getContext("2d");
+
+const video=document.createElement("video");
+
+video.autoplay=true;
+video.playsInline=true;
+video.muted=true;
+
+const status=document.getElementById("status");
+
+let stream=null;
+let active=false;
+let photoReady=false;
+let animation=null;
+
+
+// ===================================
+// LOAD ORIGINAL FRAME
+// ===================================
+
+const frame=new Image();
+
+frame.src="./selvi-grand-diwali-frame.png";
+
+const frameLoaded=new Promise((resolve,reject)=>{
+
+ frame.onload=resolve;
+
+ frame.onerror=()=>reject(
+  new Error("Frame PNG not found. Check filename.")
+ );
+
 });
-&lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;
+
+
+// ===================================
+// BACKGROUND
+// ===================================
+
+function drawBackground(ctx){
+
+ const g=ctx.createLinearGradient(0,0,W,H);
+
+ g.addColorStop(0,"#260039");
+ g.addColorStop(.5,"#500078");
+ g.addColorStop(1,"#21002e");
+
+ ctx.fillStyle=g;
+ ctx.fillRect(0,0,W,H);
+
+}
+
+
+// ===================================
+// CAMERA IMAGE
+// ===================================
+
+function drawCamera(ctx){
+
+ if(!video.videoWidth) return;
+
+ const vw=video.videoWidth;
+ const vh=video.videoHeight;
+
+ const targetRatio=W/H;
+ const sourceRatio=vw/vh;
+
+ let sx=0;
+ let sy=0;
+ let sw=vw;
+ let sh=vh;
+
+ if(sourceRatio>targetRatio){
+
+  sw=vh*targetRatio;
+  sx=(vw-sw)/2;
+
+ }else{
+
+  sh=vw/targetRatio;
+  sy=(vh-sh)/2;
+
+ }
+
+ ctx.save();
+
+ // Mirror selfie camera
+
+ ctx.translate(W,0);
+ ctx.scale(-1,1);
+
+ ctx.drawImage(
+  video,
+  sx,sy,sw,sh,
+  0,0,W,H
+ );
+
+ ctx.restore();
+
+}
+
+
+// ===================================
+// CAMERA OPENING
+// ===================================
+
+// Only the upper-middle opening
+// receives the camera.
+// Bottom 2.0 artwork stays protected.
+
+function drawCameraWindow(ctx){
+
+ ctx.save();
+
+ ctx.beginPath();
+
+ // Top-left below logo
+
+ ctx.moveTo(385,395);
+
+ // Top curve
+
+ ctx.bezierCurveTo(
+  300,395,
+  235,445,
+  220,525
+ );
+
+ // Left side
+
+ ctx.bezierCurveTo(
+  195,620,
+  200,770,
+  240,855
+ );
+
+ // Bottom-left curve
+
+ ctx.bezierCurveTo(
+  275,915,
+  340,935,
+  420,935
+ );
+
+ // Bottom edge
+
+ ctx.bezierCurveTo(
+  520,945,
+  625,945,
+  725,935
+ );
+
+ // Bottom-right curve
+
+ ctx.bezierCurveTo(
+  810,935,
+  875,915,
+  905,855
+ );
+
+ // Right side
+
+ ctx.bezierCurveTo(
+  945,770,
+  950,620,
+  920,525
+ );
+
+ // Top-right curve
+
+ ctx.bezierCurveTo(
+  900,445,
+  835,395,
+  755,395
+ );
+
+ ctx.closePath();
+
+ ctx.clip();
+
+ drawCamera(ctx);
+
+ ctx.restore();
+
+}
+
+
+// ===================================
+// FINAL COMPOSITION
+// ===================================
+
+function drawFinal(ctx){
+
+ // Background
+
+ drawBackground(ctx);
+
+ // Camera inside central opening only
+
+ if(video.videoWidth){
+
+  drawCameraWindow(ctx);
+
+ }
+
+ // Entire original frame on top.
+ // Do not crop or resize the frame.
+
+ ctx.drawImage(
+  frame,
+  0,
+  0,
+  W,
+  H
+ );
+
+}
+
+
+// ===================================
+// INITIAL FRAME
+// ===================================
+
+async function initialize(){
+
+ try{
+
+  await frameLoaded;
+
+  drawFinal(pctx);
+
+  status.textContent=
+   "Frame Ready! Click Start Camera.";
+
+ }catch(error){
+
+  status.textContent=error.message;
+
+ }
+
+}
+
+initialize();
+
+
+// ===================================
+// LIVE CAMERA PREVIEW
+// ===================================
+
+function livePreview(){
+
+ if(!active) return;
+
+ drawFinal(pctx);
+
+ animation=requestAnimationFrame(livePreview);
+
+}
+
+
+// ===================================
+// START CAMERA
+// ===================================
+
+document.getElementById("start").onclick=async()=>{
+
+ try{
+
+  await frameLoaded;
+
+  status.textContent="Opening Camera...";
+
+  if(!navigator.mediaDevices?.getUserMedia){
+
+   throw new Error("Open this website using HTTPS or localhost.");
+
+  }
+
+  if(stream){
+
+   stream.getTracks().forEach(t=>t.stop());
+
+  }
+
+  stream=await navigator.mediaDevices.getUserMedia({
+
+   video:{
+    facingMode:"user",
+    width:{ideal:1280},
+    height:{ideal:1600}
+   },
+
+   audio:false
+
+  });
+
+  video.srcObject=stream;
+
+  await new Promise((resolve,reject)=>{
+
+   video.onloadedmetadata=resolve;
+   video.onerror=reject;
+
+  });
+
+  await video.play();
+
+  active=true;
+  photoReady=false;
+
+  document.getElementById("liveStage").style.display="block";
+  document.getElementById("photoStage").style.display="none";
+
+  document.getElementById("capture").disabled=false;
+
+  document.getElementById("download").disabled=true;
+  document.getElementById("whatsapp").disabled=true;
+  document.getElementById("instagram").disabled=true;
+  document.getElementById("retake").disabled=true;
+
+  cancelAnimationFrame(animation);
+
+  livePreview();
+
+  status.textContent="Camera Ready! Position yourself inside the frame.";
+
+ }catch(error){
+
+  status.textContent="Camera Error: "+error.message;
+
+ }
+
+};
+
+
+// ===================================
+// TAKE PHOTO - FIXED
+// ===================================
+
+document.getElementById("capture").onclick=()=>{
+
+ if(!video.videoWidth || !active) return;
+
+ // Draw final photo BEFORE stopping preview
+
+ drawFinal(rctx);
+
+ active=false;
+
+ cancelAnimationFrame(animation);
+
+ // Hide live preview
+
+ document.getElementById("liveStage").style.display="none";
+
+ // IMPORTANT: Show captured canvas itself
+
+ document.getElementById("photoStage").style.display="block";
+
+ result.style.display="block";
+
+ photoReady=true;
+
+ document.getElementById("capture").disabled=true;
+ document.getElementById("download").disabled=false;
+ document.getElementById("whatsapp").disabled=false;
+ document.getElementById("instagram").disabled=false;
+ document.getElementById("retake").disabled=false;
+
+ status.textContent="Your Diwali Selfie is Ready!";
+
+};
+
+
+// ===================================
+// CREATE PHOTO FILE
+// ===================================
+
+function getFile(){
+
+ return new Promise((resolve,reject)=>{
+
+  result.toBlob(blob=>{
+
+   if(!blob){
+
+    reject(new Error("Photo creation failed."));
+    return;
+
+   }
+
+   resolve(new File(
+    [blob],
+    "Selvi-Silks-Diwali.png",
+    {type:"image/png"}
+   ));
+
+  },"image/png");
+
+ });
+
+}
+
+
+// ===================================
+// DOWNLOAD PHOTO
+// ===================================
+
+document.getElementById("download").onclick=async()=>{
+
+ if(!photoReady) return;
+
+ try{
+
+  const file=await getFile();
+
+  const url=URL.createObjectURL(file);
+
+  const a=document.createElement("a");
+
+  a.href=url;
+  a.download=file.name;
+
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+
+  status.textContent="Photo Downloaded Successfully!";
+
+ }catch(error){
+
+  status.textContent=error.message;
+
+ }
+
+};
+
+
+// ===================================
+// SHARE PHOTO
+// ===================================
+
+async function sharePhoto(app){
+
+ if(!photoReady) return;
+
+ try{
+
+  const file=await getFile();
+
+  if(
+   navigator.share &&
+   navigator.canShare &&
+   navigator.canShare({files:[file]})
+  ){
+
+   await navigator.share({
+
+    files:[file],
+
+    title:"Selvi Silks Grand Diwali 2.0",
+
+    text:"Happy Diwali from Selvi Silks! 🪔✨"
+
+   });
+
+  }else{
+
+   const url=URL.createObjectURL(file);
+
+   const a=document.createElement("a");
+
+   a.href=url;
+   a.download=file.name;
+
+   a.click();
+
+   setTimeout(()=>URL.revokeObjectURL(url),60000);
+
+   if(app==="WhatsApp"){
+
+    window.open(
+     "https://wa.me/?text="+
+     encodeURIComponent("Happy Diwali from Selvi Silks! 🪔"),
+     "_blank"
+    );
+
+   }else{
+
+    window.open("https://www.instagram.com/","_blank");
+
+   }
+
+   status.textContent=
+    "Photo downloaded. Attach it in "+app+".";
+
+  }
+
+ }catch(error){
+
+  if(error.name!=="AbortError"){
+
+   status.textContent=error.message;
+
+  }
+
+ }
+
+}
+
+document.getElementById("whatsapp").onclick=()=>{
+ sharePhoto("WhatsApp");
+};
+
+document.getElementById("instagram").onclick=()=>{
+ sharePhoto("Instagram");
+};
+
+
+// ===================================
+// RETAKE PHOTO
+// ===================================
+
+document.getElementById("retake").onclick=()=>{
+
+ if(!stream) return;
+
+ photoReady=false;
+ active=true;
+
+ document.getElementById("liveStage").style.display="block";
+ document.getElementById("photoStage").style.display="none";
+
+ result.style.display="none";
+
+ document.getElementById("capture").disabled=false;
+ document.getElementById("download").disabled=true;
+ document.getElementById("whatsapp").disabled=true;
+ document.getElementById("instagram").disabled=true;
+ document.getElementById("retake").disabled=true;
+
+ cancelAnimationFrame(animation);
+
+ livePreview();
+
+ status.textContent="Ready for another selfie!";
+
+};
+
+
+// ===================================
+// STOP CAMERA
+// ===================================
+
+window.addEventListener("pagehide",()=>{
+
+ active=false;
+
+ cancelAnimationFrame(animation);
+
+ if(stream){
+
+  stream.getTracks().forEach(t=>t.stop());
+
+ }
+
+});
+
+</script>
+
+</body>
+</html>
